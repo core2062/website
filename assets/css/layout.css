@@ -1,0 +1,314 @@
+@import url("http://fonts.googleapis.com/css?family=Orbitron:700");
+#page-wrap {
+  max-width: 1000px;
+  min-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+}
+#page {
+  background: #fff;
+  padding: 5px;
+  position: relative;
+  font-size: 0;
+  z-index: 5;
+}
+.sidebar,
+.sidebar .wrapper,
+.main-content {
+  display: inline-block;
+}
+.sidebar {
+  width: 33.33333333333333%;
+}
+.sidebar img {
+  width: 100%;
+}
+.main-content {
+  vertical-align: top;
+  width: 66.66666666666666%;
+}
+.main-content.no-sidebar {
+  width: 100%;
+}
+@media screen and (max-width:1000px) {
+  #page-wrap {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .sidebar .wrapper {
+    width: 50%;
+  }
+  .main-content,
+  .sidebar {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .sidebar .wrapper {
+    width: 100%;
+  }
+}
+.sidebar p {
+  text-align: justify;
+  -webkit-hyphens: auto;
+  -webkit-hyphenate-limit-after: 1;
+  -webkit-hyphenate-limit-before: 3;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+@media screen and (max-width: 600px) {
+  p {
+    text-align: justify;
+  }
+}
+.post-content,
+.post-content p {
+  line-height: 18px;
+}
+a {
+  color: #ff731c;
+  text-decoration: none;
+}
+p a:hover,
+.more-posts a:hover {
+  background-color: #ff731c;
+  color: #fff;
+}
+.aligncenter {
+  display: block;
+  margin: 0 auto;
+}
+.alignleft {
+  float: left;
+}
+.alignright {
+  float: right;
+}
+hr {
+  margin: 10px 0;
+}
+blockquote {
+  margin: 1em 3em;
+  padding: 0.5em 1em;
+  border-left: 5px solid #ff731c;
+  background-color: #f6ebc1;
+}
+.wp-caption {
+  border: 1px solid #d2d2d2;
+  border-bottom: 1px solid #b8b8b8;
+  border-right: 1px solid #b8b8b8;
+  text-align: center;
+  background: #efefef;
+  padding: 10px;
+  margin: 10px;
+  padding-bottom: 0;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+ul a,
+a.logo-click {
+  outline: none;
+}
+div {
+  position: relative;
+/* This will save you having to declare each div's position as 'relative' and allows you to absolutely position elements inside them */
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #1f1f1f;
+}
+#nav-wrapper {
+  display: none;
+}
+#nav-wrapper + label {
+  display: inline;
+  width: 100%;
+  font-size: 14px;
+  color: #fff;
+}
+@media screen and (max-width: 700px) {
+  #nav-wrapper:checked + label {
+    height: 40px;
+    overflow: hidden;
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+    display: block;
+    position: relative;
+  }
+  #nav-wrapper:checked + label:after {
+    position: absolute;
+    display: block;
+    text-align: center;
+    line-height: 40px;
+    vertical-align: center;
+    top: 0;
+    z-index: 999999;
+    width: 100%;
+    height: 40px;
+    content: "▼ Click to view Navigation ▼";
+    background-color: #57341e;
+    border: 1px solid #73523b;
+  }
+}
+.menu {
+  position: relative;
+  background: #1f1f1f;
+  background: rgba(31,31,31,0.75);
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  list-style-position: outside;
+  font-size: 0;
+  font-weight: bold;
+  z-index: 2000;
+  line-height: 36px;
+  width: 100%;
+  -webkit-box-sizing(): border-box;
+  -moz-box-sizing(): border-box;
+  -o-box-sizing(): border-box;
+  -ms-box-sizing(): border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-top: solid #73523b 1px;
+  border-left: solid #73523b 1px;
+}
+@media screen and (max-width: 950px) {
+  .menu > li {
+    width: 16.666666666666668%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .menu > li {
+    width: 20%;
+  }
+}
+@media screen and (max-width: 700px) {
+  .menu > li {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .menu > li {
+    width: 33.333333333333336%;
+  }
+}
+@media screen and (max-width: 400px) {
+  .menu > li {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 300px) {
+  .menu > li {
+    width: 100%;
+  }
+}
+.menu div,
+.menu label {
+  vertical-align: top;
+}
+.menu a,
+.menu label {
+  display: inline-block;
+  color: #fff;
+  padding: 0 7px;
+}
+.menu a {
+  -webkit-box-sizing(): border-box;
+  -moz-box-sizing(): border-box;
+  -o-box-sizing(): border-box;
+  -ms-box-sizing(): border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-right: -26px;
+  padding-right: 33px;
+  min-width: 100%;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.menu label,
+.menu div {
+  z-index: 100;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 40px;
+}
+.menu div {
+  display: none;
+}
+.menu li {
+  cursor: default;
+  display: inline-block;
+  border-right: solid #73523b 1px;
+  border-bottom: solid #73523b 1px;
+  margin-right: -1px;
+  margin-bottom: -1px;
+}
+.menu li.no-children label,
+.menu li.no-children div {
+  display: none;
+}
+.menu li:hover {
+  background: #ff731c;
+}
+.menu li:hover > label,
+.menu li:hover > div {
+  background: #e25700;
+}
+.menu [type=radio] {
+  display: none;
+}
+.menu [type=radio]:checked ~ label {
+  display: none;
+}
+.menu [type=radio]:checked ~ label ~ div {
+  background: #e25700;
+  display: inline-block;
+}
+.menu [type=radio]:checked ~ label ~ ul {
+  display: block;
+}
+.menu ul {
+  z-index: 101;
+  background: #fff;
+  position: absolute;
+  display: none;
+}
+.menu ul a,
+.menu ul label {
+  color: #333;
+}
+.menu ul div,
+.menu ul label {
+  z-index: 102;
+}
+.menu ul li {
+  border: none;
+  display: block;
+  position: relative;
+  border-bottom: 1px solid #c8c8c8;
+  white-space: nowrap;
+}
+.menu ul li:first-child {
+  border-top: 1px solid #c8c8c8;
+}
+.menu ul li:hover {
+  background: #ffb98e;
+}
+.menu ul li:hover > label,
+.menu ul li:hover > div label {
+  background: #ff9d60;
+}
+.menu ul [type=radio]:checked ~ label ~ div label {
+  background: #ff9d60;
+}
+.menu ul ul {
+  top: 0;
+  left: 100%;
+}

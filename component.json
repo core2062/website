@@ -1,0 +1,19 @@
+{
+	"name": "chazsouthard.com",
+	"main": "public/js/main.js",
+	"dependencies": {
+		"components/underscore": "*",
+		"components/backbone": "1.1.0",
+		"components/jquery": "2.0.3",
+		"learnboost/jsonp": "*"
+	},
+	"scripts": [
+		"public/js/main.js",
+		"public/js/gallery.js",
+		"public/js/flying-focus.js",
+		"public/js/jquery.fancybox.js",
+		"public/js/jquery.form.js",
+		"public/js/contact-form.js",
+		"public/js/share.js"
+	]
+}

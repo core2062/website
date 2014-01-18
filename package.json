@@ -1,0 +1,10 @@
+{
+  "name": "core-website",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "roots watch"
+  },
+  "dependencies": {
+    "component-builder": "~0.10.1"
+  }
+}
