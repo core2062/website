@@ -1,16 +1,49 @@
-!!!
+!!! 5
 html
   head
-    meta(charset='utf8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge, chrome=1')
-    meta(name='description', content='description of your site')
-    meta(name='author', content= "author of the site")
-
-    title= title
-    
-    link(rel='stylesheet', href='css/master.css')
   body
-    != content
+    #page-wrap
 
-    //- add other scripts through require.js, not here
-    script(data-main="js/main", src="js/require.js")
+      // top
+
+      #page
+        .banner-bar
+          a.banner-title(href='/' title='Click here to return home') Community Of Robotics Engineers - FIRST Robotics Team 2062 - Waukesha, Wisconsin
+          a.learnmore(href='/about' title='Click here to learn more!') Learn More!
+
+        // main
+
+        img.badge(src='/img/FRC-ExcelAward11.jpg', alt='Website Excellence Award')
+        .clear
+        p.footer
+          :markdown
+            C.O.R.E. 2062 is proudly part of [FIRST Robotics](http://usfirst.org/).
+            This work is licensed under a [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/') 
+            [Entries (RSS)](http://core2062.com/feed/)
+
+        // footer
+
+  script(type='text/javascript', src='/js/jquery.tweet.js')
+  script(type='text/javascript', src='/js/jquery.hypher.js')
+  script(type='text/javascript', src='/js/jquery.slicebox.js')
+  script(type='text/javascript').
+    $(function() {
+        $(".menu li:not(:has(ul))").addClass('no-children');
+    });
+
+    $('.sb-slider').slicebox({
+        orientation : 'r',
+        cuboidsRandom : true,
+         autoplay : true,
+        sequentialFactor : 200
+    });
+
+    $('p').hyphenate('en-us');
+
+    jQuery(function($){
+        $("#twitter_box div").tweet({
+            username: "core2062",
+            count: 5,
+            loading_text: "loading tweets..."
+        });
+    });
