@@ -1,13 +1,38 @@
-# PhantomJS doesn't support bind yet
-`Function.prototype.bind = Function.prototype.bind || function (thisp) {
-  var fn = this;
-  return function () {
-    return fn.apply(thisp, arguments);
-  };
-};`
-
 # this points to the server that's holding all our content in wordpress
 BACKEND_URL = 'http://69.55.49.53'
+
+# PhantomJS doesn't support bind yet
+`Function.prototype.bind = Function.prototype.bind || function (thisp) {
+	var fn = this;
+	return function () {
+		return fn.apply(thisp, arguments);
+	};
+};`
+
+require './jquery.tweet'
+require './jquery.hypher'
+require './jquery.slicebox'
+
+`$(function() {
+	$('.menu li:not(:has(ul))').addClass('no-children');
+});
+
+$('.sb-slider').slicebox({
+	orientation : 'r',
+	cuboidsRandom : true,
+	autoplay : true,
+	sequentialFactor : 200
+});
+
+$('p').hyphenate('en-us');
+
+jQuery(function($){
+	$("#twitter_box div").tweet({
+		username: "core2062",
+		count: 5,
+		loading_text: "loading tweets..."
+	});
+});`
 
 window.$ = require 'jquery'
 _ = require 'underscore'

@@ -1,5 +1,5 @@
 {
-	"name": "chazsouthard.com",
+	"name": "core2062.com",
 	"main": "public/js/main.js",
 	"dependencies": {
 		"components/underscore": "*",
