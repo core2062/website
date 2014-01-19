@@ -28,7 +28,29 @@ html
 
   body
     #page-wrap
-      include _menu.jade
+      .header
+        a#logo(href='http://core2062.com', title='Click here to go back to the main page.')
+            | C.O.R.E.
+            br
+            | 2062
+          form#searchform(method='get', action='http://core2062.com/')
+            input#s(type='text', onblur='if (this.value == \'\') {this.value = \'Find info with keywords..\';}', onfocus='if (this.value == \'Find info with keywords..\') {this.value = \'\';}', value='', name='s', alt='Search Form')
+            input#searchsubmit(type='submit', alt='Search Submit', value='')
+          .header-show
+            ul#sb-slider.sb-slider
+              ul
+                li
+                  img(src='/wp-content/uploads/2013/03/slide_6.jpg')
+                li
+                  img(src='/wp-content/uploads/2013/03/slide_5.jpg')
+                li
+                  img(src='/wp-content/uploads/2013/03/slide_3.jpg')
+                li
+                  img(src='/wp-content/uploads/2013/03/slide_2.jpg')
+                li
+                  img(src='/wp-content/uploads/2013/03/slide_1.jpg')
+
+        include _menu.jade
 
       #page
         .banner-bar
