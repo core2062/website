@@ -1,17 +1,41 @@
-!!! 5
+doctype html
 html
   head
+    title
+    meta(charset='utf8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge, chrome=1')
+    meta(name='viewport' content='width=device-width')
+    meta(name='description' content='.............')
+    link(rel='shortcut icon' href='/favicon.ico')
+    link(rel='stylesheet' type='text/css' href='/css/main.css')
+
+    <!--[if lt IE 9]>
+    script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
+    <![endif]-->
+
+    // safety db
+      link(href='http://fonts.googleapis.com/css?family=Orbitron:400,900' rel='stylesheet' type='text/css')
+      link(rel='stylesheet' type='text/css' href='/css/safety.css')
+      link(href='http://fonts.googleapis.com/css?family=Iceland' rel='stylesheet' type='text/css')
+
+    // not safety
+    script(type='text/javascript' src='/js/modernizr.custom.js')
+    script(type='text/javascript').
+      Modernizr.load({
+        test: Modernizr.inlinesvg && Modernizr.svg,
+        nope: '/js/svg.js'
+      });
+
   body
     #page-wrap
-
-      // top
+      include _menu.jade
 
       #page
         .banner-bar
           a.banner-title(href='/' title='Click here to return home') Community Of Robotics Engineers - FIRST Robotics Team 2062 - Waukesha, Wisconsin
           a.learnmore(href='/about' title='Click here to learn more!') Learn More!
 
-        // main
+        != content
 
         img.badge(src='/img/FRC-ExcelAward11.jpg', alt='Website Excellence Award')
         .clear
@@ -23,27 +47,7 @@ html
 
         // footer
 
-  script(type='text/javascript', src='/js/jquery.tweet.js')
-  script(type='text/javascript', src='/js/jquery.hypher.js')
-  script(type='text/javascript', src='/js/jquery.slicebox.js')
-  script(type='text/javascript').
-    $(function() {
-        $(".menu li:not(:has(ul))").addClass('no-children');
-    });
-
-    $('.sb-slider').slicebox({
-        orientation : 'r',
-        cuboidsRandom : true,
-         autoplay : true,
-        sequentialFactor : 200
-    });
-
-    $('p').hyphenate('en-us');
-
-    jQuery(function($){
-        $("#twitter_box div").tweet({
-            username: "core2062",
-            count: 5,
-            loading_text: "loading tweets..."
-        });
-    });
+  script(src="main.js")
+  script.
+    window.prerenderReady = false;
+    require('core2062.com');
