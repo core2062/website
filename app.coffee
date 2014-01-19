@@ -28,7 +28,7 @@ layouts:
   default: 'layout.jade'
 
 locals:
-  title: 'CORE 2062'
+  title: 'C.O.R.E. 2062'
 
 stylus:
   plugins: [module.require('nib')]
