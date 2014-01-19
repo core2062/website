@@ -14,6 +14,8 @@
 		"public/js/jquery.fancybox.js",
 		"public/js/jquery.form.js",
 		"public/js/contact-form.js",
-		"public/js/share.js"
+		"public/js/jquery.tweet.js",
+		"public/js/jquery.hypher.js",
+		"public/js/jquery.slicebox.js"
 	]
 }
