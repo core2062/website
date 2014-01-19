@@ -1,4 +1,10 @@
-@import 'library.styl'
+@import 'nib/vendor'
+vendor-prefixes = webkit moz o ms official
+
+@import '_library.styl'
+@import '_reset.css'
+@import '_layout.styl'
+@import '_slicebox.styl'
 
 //Typography
 
@@ -96,20 +102,7 @@ p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper +
 	z-index 9999
 
 .header-short, .header
-	// Old browsers
 	background orange
-	//background radial-gradient(50% 0 45deg, circle closest-corner, rgba(255,255,255,.5) 0%, transparent 100%), orange
-	// FF3.6+
-	background -moz-radial-gradient(top, ellipse cover, rgba(255,255,255,0.20) 0%, transparent 100%), orange
-	// Chrome,Safari4+
-	background -webkit-gradient(radial, center top, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,0.20)), color-stop(100%,transparent)), orange
-	// Chrome10+,Safari5.1+
-	background -webkit-radial-gradient(top, ellipse cover, rgba(255,255,255,0.20) 0%,transparent 100%), orange
-	// Opera 12+
-	background -o-radial-gradient(top, ellipse cover, rgba(255,255,255,0.20) 0%,transparent 100%), orange
-	// IE10+
-	background -ms-radial-gradient(top, ellipse cover, rgba(255,255,255,0.20) 0%,transparent 100%), orange
-	// W3C
 	background radial-gradient(ellipse at top, rgba(255,255,255,0.20) 0%,transparent 100%), orange
 
 
@@ -171,7 +164,6 @@ p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper +
 		&:hover
 			color white
 			background lighten(orange, 15%)
-
 
 .about-intro
 	width 860px
