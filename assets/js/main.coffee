@@ -9,31 +9,6 @@ BACKEND_URL = 'http://69.55.49.53'
 	};
 };`
 
-require './jquery.tweet'
-require './jquery.hypher'
-require './jquery.slicebox'
-
-`$(function() {
-	$('.menu li:not(:has(ul))').addClass('no-children');
-});
-
-$('.sb-slider').slicebox({
-	orientation : 'r',
-	cuboidsRandom : true,
-	autoplay : true,
-	sequentialFactor : 200
-});
-
-$('p').hyphenate('en-us');
-
-jQuery(function($){
-	$("#twitter_box div").tweet({
-		username: "core2062",
-		count: 5,
-		loading_text: "loading tweets..."
-	});
-});`
-
 window.$ = require 'jquery'
 _ = require 'underscore'
 Backbone = require 'backbone'
@@ -46,11 +21,29 @@ require './jquery.fancybox'
 require './jquery.form'
 require './contact-form'
 
-require './share'
-$('.share').share(
-	url: 'http://chazsouthard.com'
-	text: 'The portfolio of Chaz Southard'
+$('.menu li:not(:has(ul))').addClass 'no-children'
+
+require './jquery.slicebox'
+$('.sb-slider').slicebox(
+	orientation: 'r'
+	cuboidsRandom: true
+	autoplay: true
+	sequentialFactor: 200
 )
+
+require './jquery.hypher'
+$('p').hyphenate 'en-us'
+
+### Twitter Broke its API
+require './jquery.tweet'
+jQuery(function($){
+	$("#twitter_box div").tweet({
+		username: "core2062",
+		count: 5,
+		loading_text: "loading tweets..."
+	});
+});
+###
 
 window._wpcf7 =
 	loaderUrl: BACKEND_URL + '/wp-content/plugins/contact-form-7/images/ajax-loader.gif',
