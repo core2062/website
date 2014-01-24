@@ -1,5 +1,5 @@
 # this points to the server that's holding all our content in wordpress
-BACKEND_URL = 'http://69.55.49.53'
+BACKEND_URL = 'http://core2062.com'
 
 # PhantomJS doesn't support bind yet
 `Function.prototype.bind = Function.prototype.bind || function (thisp) {
@@ -122,8 +122,9 @@ class Page extends Backbone.Model
 		slug: ''
 		selected: false # value used by Pages for changing the active page
 		categories: []
+		content: ''
 
-		# bind-able functions... empty by default
+		# bind-able functions... no-op by default
 		first_load: (->)
 		on_load: (->)
 		on_unload: (->)
@@ -144,33 +145,39 @@ class Page extends Backbone.Model
 
 		# for page specific init functions
 		@get('first_load').call()
+		p "loaded page: #{@get 'name'}"
 
 # this is a view that's connected to the page model... it just deals with
 # hiding the content of pages that we are not on, and showing the content of
 # the page that we are on
 class PageView extends Backbone.View
+	tagName: 'section'
+
 	render: ->
 		if @model.get('selected')
 			@el.style.display = 'block' # show
 		else
 			@el.style.display = 'none' # hide
 
+	updateContent: ->
+		@el.innerHTML = @model.get 'content'
+
 	initialize: ->
 		_.bindAll @
 
+		@model.on('change:content', @updateContent)
 		@model.on('change:selected', @render)
 		@model.view = @
 
 		slug = @model.get('slug')
+		
+		@$el.attr(
+			id: "#{slug}-content"
+			class: @model.get('categories').join('-category ')
+		)
 
-		classes = @model.get('categories').join(' ')
-		$(window.navView.el).after("""
-			<section id="#{slug}_content" class="#{classes}">
-			</section>
-		""")
-
-		@el = $("\##{slug}_content")[0]
 		@render()
+		@updateContent()
 
 # this is a collection of all the pages in the application... it deals with
 # changing the current page when the url changes
@@ -197,7 +204,7 @@ class PagesCollection extends Backbone.Collection
 		if page?
 			page.set(selected: true)
 		else
-			p "#{page_slug} doesn't exist, redirecting to #{@default_page}..."
+			p "#{page_slug} doesn't exist, redirecting to #{@default_page}"
 
 			router.navigate('!' + @default_page,
 				trigger: true
@@ -291,6 +298,35 @@ pages_loaded = ->
 	p 'all loaded'
 	window.prerenderReady = true
 
+blog = pages.create(
+	slug: 'blog'
+	name: 'Recent News'
+)
+$('.titleblock').after(blog.view.el)
+
+# get all the content on the homepage as JSON and then call the function with
+# the data
+jsonp("#{BACKEND_URL}/?json=1", {}, (err, data) ->
+	# loop through the data and make a section for each post, and append it to
+	# the blog page
+	for post in data['posts'] 
+		process_attachments(post['attachments'])
+
+		blog.set(content: """
+		#{blog.get('content')}
+		<section>
+			<h1 class="title">#{post['title']}</h1>
+			<p class="post-info">
+				Posted on <span class="date">#{post['date']}</span>
+				by <span class="author">#{post['author']['name']}</span>
+			</p>
+			#{post['content']}
+		</section>
+		""")
+
+	pages_loaded()
+)
+
 jsonp("#{BACKEND_URL}/?json=get_page_index", {}, (err, data) ->
 	# loop through the pages
 	for page in data['pages']
@@ -298,42 +334,16 @@ jsonp("#{BACKEND_URL}/?json=get_page_index", {}, (err, data) ->
 
 		categories = []
 		for category in page['categories']
-			categories.push 'category-' + category['slug']
-
-		pages.create(
+			categories.push category['slug']
+	
+		pageModel = pages.create(
 			slug: page['slug']
 			name: page['title']
 			categories: categories
+			content: page['content']
 		)
+		$('.titleblock').after(pageModel.view.el)
 
-		# add the content
-		$("##{page['slug']}_content")[0].innerHTML = page['content']
-		p "loaded page: #{page['title']}"
-
-	pages_loaded()
-)
-
-pages.create(
-	slug: 'blog'
-	name: 'Blog'
-)
-
-# get all the content on the homepage as JSON and then call the function
-# with the data
-jsonp("#{BACKEND_URL}/?json=1", {}, (err, data) ->
-	# loop through the data and make a section for each post, and append it to the blog page
-	for post in data['posts'] 
-		process_attachments(post['attachments'])
-
-		$('#blog_content').append("""
-		<section>
-			<h1 class="title">#{post['title']}</h1>
-			<p class="post-info">Posted on <span class="date">#{post['date']}</span> by <span class="author">#{post['author']['name']}</span></p>
-			#{post['content']}
-		</section>
-		""")
-	
-	p "loaded page: Blog"
 	pages_loaded()
 )
 
