@@ -1,13 +1,9 @@
+# PhantomJS doesn't support bind yet
+require 'functionbind'
+
 # this points to the server that's holding all our content in wordpress
 BACKEND_URL = 'http://core2062.com'
 
-# PhantomJS doesn't support bind yet
-`Function.prototype.bind = Function.prototype.bind || function (thisp) {
-	var fn = this;
-	return function () {
-		return fn.apply(thisp, arguments);
-	};
-};`
 
 window.$ = require 'jquery'
 _ = require 'underscore'
