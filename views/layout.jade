@@ -51,7 +51,12 @@ html
                   img(src='/wp-content/uploads/2013/03/slide_1.jpg')
 
         nav
-          include _menu.jade
+          input#nav-wrapper(type="checkbox" checked)
+          label(for='nav-wrapper')
+            ul.menu
+              //include _menu.jade
+
+          select
 
       #page
         .banner-bar

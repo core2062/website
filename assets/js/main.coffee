@@ -64,10 +64,10 @@ class NavView extends Backbone.View
     page = @model.current_page()
 
     # set the title of the page
-    document.title = "#{page.get('name')} | Chaz Southard"
+    document.title = "#{page.get('name')} | C.O.R.E. 2062"
 
-    # ensure that the correct navbar button is selected... since it is
-    # a radio button, it unselects anything else
+    # ensure that the correct navbar button is selected... since it is a radio
+    # button, it unselects anything else
     @$el.find("\##{page.get('slug')}_nav").prop "checked", true
     @$el.find('select').val('#' + page.get('slug'))
 
@@ -77,11 +77,16 @@ class NavView extends Backbone.View
     name = page_model.get('name')
     slug = page_model.get('slug')
 
-    @$el.find('.buttonset').append("""
-      <input type="radio" name="nav" value="#{slug}", id="#{slug}_nav")>
-      <label for="#{slug}_nav">
+    @$el.find('.menu').append("""
+      <li>
         <a href="#!#{slug}">#{name}</a>
-      </label>
+        <input id="#{slug}_nav" type="radio" name="group-0">
+        <label for="#{slug}_nav">▼</label>
+        <div>
+          <input id="close-0" type="radio" name="group-0">
+          <label for="close-0">▲</label>
+        </div>
+      <li>
     """)
 
     @$el.find('select').append("""
@@ -134,16 +139,13 @@ class PageView extends Backbone.View
   tagName: 'section'
 
   render: =>
+    p 'render page', @el
     if @model.get('selected')
       @el.style.display = 'block' # show
     else
       @el.style.display = 'none' # hide
 
-  #updateContent: =>
-  #  @el.innerHTML = @model.get 'content'
-
   initialize: =>
-    #@model.on('change:content', @updateContent)
     @model.on('change:selected', @render)
     @model.view = @
 
@@ -155,7 +157,6 @@ class PageView extends Backbone.View
     )
 
     @render()
-    #@updateContent()
 
 # this is a collection of all the pages in the application... it deals with
 # changing the current page when the url changes
@@ -224,39 +225,40 @@ API.cache.posts.on 'add', (model) ->
 # get the 10 most recent posts
 API.getPosts()
 
-API.request 'get_page_index', {}, (err, data) ->
-  # loop through the pages
-  for page in data['pages']
-    categories = []
-    for category in page['categories']
-      categories.push category['slug']
-  
-    pageModel = pages.create(
-      slug: page['slug']
-      name: page['title']
-      categories: categories
-      content: page['content']
-    )
-    $('.titleblock').after(pageModel.view.el)
+API.cache.pages.on 'add', (model) ->
+  categories = []
+  for category in model.get 'categories'
+    categories.push category['slug']
 
-  $('#loading').remove()
+  pageModel = pages.create(
+    slug: model.get 'slug'
+    name: model.get 'title'
+    categories: categories
+    content: model.get 'content'
+  )
+  $('.titleblock').after(pageModel.view.el)
 
-  Backbone.history.start()
-  
-  # change to default page at startup (if there is no hash fragment)
-  if Backbone.history.fragment is ''
-    App.Router.navigate('!' + pages.default_page,
-      trigger: true
-      replace: true
-    )
+  # ugh, just manually render
+  pageModel.view.el.innerHTML = pageModel.get 'content'
 
-  #make the contact form work
-  form = $('.wpcf7 form')[0]
-  $(form).attr('action', API.backendURL + $(form).attr('action'))
-  $.wpcf7Init()
+  if model.get 'slug' is 'contact'
+    #make the contact form work
+    form = $('.wpcf7 form')[0]
+    $(form).attr('action', API.backendURL + $(form).attr('action'))
+    $.wpcf7Init()
 
-  p 'all loaded'
-  window.prerenderReady = true
+API.getPages()
+
+Backbone.history.start()
+
+# change to default page at startup (if there is no hash fragment)
+if Backbone.history.fragment is ''
+  App.Router.navigate('!' + pages.default_page,
+    trigger: true
+    replace: true
+  )
+
+p 'all loaded'
 
 $("nav select").change( ->
   window.location = $(@).find("option:selected").val()

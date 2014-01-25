@@ -107,17 +107,22 @@ class Attachment extends ContentObject
 class Posts extends Backbone.Collection
   model: Post
 
+
 class Categories extends Backbone.Collection
   model: Category
+
 
 class Tags extends Backbone.Collection
   model: Tag
 
+
 class Authors extends Backbone.Collection
   model: Author
 
+
 class Comments extends Backbone.Collection
   model: Comment
+
 
 class Attachments extends Backbone.Collection
   model: Attachment
@@ -142,6 +147,7 @@ class WordPress
 
   cache:
     posts: new Posts()
+    pages: new Posts()
     categories: new Categories()
     tags: new Tags()
     authors: new Authors()
@@ -204,5 +210,10 @@ class WordPress
     @request 'get_posts', query, (err, data) =>
       unless err
         @cache.posts.add data['posts']
+
+  getPages: (query={}) ->
+    @request 'get_page_index', query, (err, data) =>
+      unless err
+        @cache.pages.add data['pages']
 
 module.exports = WordPress
