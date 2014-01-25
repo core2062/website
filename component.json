@@ -10,7 +10,8 @@
   },
   "scripts": [
     "public/js/main.js",
-    "public/js/gallery.js",
+    "public/js/wordpress.js",
+    "public/js/postview.js",
     "public/js/flying-focus.js",
     "public/js/jquery.fancybox.js",
     "public/js/jquery.form.js",
