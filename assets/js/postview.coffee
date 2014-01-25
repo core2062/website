@@ -5,7 +5,7 @@ class PostView extends Backbone.View
 
   render: ->
     @el.innerHTML = """
-      <h1 class="title">#{@model.get 'title'}</h1>
+      <h2 class="title">#{@model.get 'title'}</h2>
       <p class="post-info">
         Posted on <span class="date">#{@model.get 'date'}</span>
         by <span class="author">#{@model.get('author').get('name')}</span>

@@ -217,7 +217,11 @@ blog = pages.create(
   slug: 'blog'
   name: 'Recent News'
 )
-$('.titleblock').after(blog.view.el)
+# bleh, manual render
+blog.view.el.innerHTML = """
+  <h1>#{blog.get 'name'}</h1>
+"""
+$('.box.more-posts').before(blog.view.el)
 
 API.cache.posts.on 'add', (model) ->
   blog.view.$el.append(model.view.el)
@@ -236,10 +240,13 @@ API.cache.pages.on 'add', (model) ->
     categories: categories
     content: model.get 'content'
   )
-  $('.titleblock').after(pageModel.view.el)
+  $('.box.more-posts').before(pageModel.view.el)
 
   # ugh, just manually render
-  pageModel.view.el.innerHTML = pageModel.get 'content'
+  pageModel.view.el.innerHTML = """
+    <h1>#{pageModel.get 'name'}</h1>
+    #{pageModel.get 'content'}
+  """
 
   if model.get 'slug' is 'contact'
     #make the contact form work
@@ -257,8 +264,6 @@ if Backbone.history.fragment is ''
     trigger: true
     replace: true
   )
-
-p 'all loaded'
 
 $("nav select").change( ->
   window.location = $(@).find("option:selected").val()

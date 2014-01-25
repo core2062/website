@@ -38,7 +38,7 @@ h4
 	rem(font-size, font_size)
 	rem(line-height, font_size*(4/3))
 
-p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper + label:after
+p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper + label:after, #blog-content section
 	font-family: "Calibri", Arial, Verdana, sans-serif
 	font_size = 15
 	rem(font-size, font_size)
@@ -102,7 +102,6 @@ p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper +
 	background orange
 	background radial-gradient(ellipse at top, rgba(255,255,255,0.20) 0%,transparent 100%), orange
 
-
 .header
 	width 100%
 	z-index 500
@@ -120,7 +119,6 @@ p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper +
 	width 100%
 
 @media screen and (max-width: 600px)
-	
 	.header-short-pic img
 		min-width 600px
 
@@ -150,7 +148,7 @@ p, .wp-caption, .wp-caption-dd, .post-content, .tweet_list, .box, #nav-wrapper +
 			color orange
 
 	.learnmore
-		vendor(box-sizing, border-box)
+		box-sizing border-box
 		position absolute
 		background orange
 		color white
@@ -191,45 +189,19 @@ a.button
 a.blue
 	background #0066b3
 
-#breadcrumbs
-	color #dadada
-	margin-left 10px
-	font-size 14px
-	line-height 1.2em
-	position absolute
-	left 0
-
-	a
-		margin-left 1px
-		font-size 18px
-
-		&:hover
-			background none
-
 .text
 	margin 10px
 
 	p
 		margin-bottom 10px
 
-.titleblock
+#page h1
 	background black
 	position relative
 	margin box_margin
 	margin-bottom -(box_margin)
 	color white
-
-	h3, h4, a
-		padding 10px
-
-	a
-		color white
-		text-decoration none
-		padding 0
-
-		&:hover
-			text-decoration none
-			color orange
+	padding 10px
 
 .postpagetitle
 	display inline
@@ -245,33 +217,7 @@ a.blue
 	font-size 12px
 	margin-right 5px
 
-.post-title
-	background #f0f0f0
-	vertical-align middle
-	position relative
-
-	a
-		display inline-block
-
-	@media screen and (max-width: 600px)
-
-		a
-			width 100%
-		
-	.byline
-		float right
-		right 6px
-		text-align right
-		margin-bottom 6px
-
-	@media screen and (max-width: 600px)
-		
-		.byline
-			float left
-			display inline-block
-			right 6px
-
-.post-content
+#blog-content section
 	padding box_margin*2
 
 	ul, li
@@ -287,6 +233,21 @@ a.blue
 		a img
 			margin img_margin
 			margin-bottom 3px
+
+	.title, .post-info
+		font-size 16px
+		margin 0
+		font-weight normal
+		vertical-align middle
+	
+	.title
+		color orange
+		display inline-block
+			
+	@media screen and (min-width: 600px)
+		.post-info
+			float right
+			display inline-block
 
 .more-posts
 	text-align center
@@ -322,7 +283,7 @@ label
 	font-size 12px
 	color #595959
 
-.box, .alert
+.box, .alert, #blog-content section
 	background #f0f0f0
 	border 1px solid #d3d3d3
 	margin box_margin
@@ -369,7 +330,7 @@ a.permlink
 	float right
 	margin box_margin
 
-.footer
+footer
 	background orange
 	font-size 12px
 	padding 5px
