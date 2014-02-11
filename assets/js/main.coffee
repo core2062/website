@@ -1,9 +1,6 @@
 # PhantomJS doesn't support bind yet
 require 'functionbind'
 
-p = (args...) ->
-  console.log args...
-
 window.$ = require 'jquery'
 _ = require 'underscore'
 Backbone = require 'backbone'
@@ -71,32 +68,10 @@ class NavView extends Backbone.View
     @$el.find("\##{page.get('slug')}_nav").prop "checked", true
     @$el.find('select').val('#' + page.get('slug'))
 
-    p "(nav) page: #{page.get('name')}"
-
-  added_page: (page_model) =>
-    name = page_model.get('name')
-    slug = page_model.get('slug')
-
-    @$el.find('.menu').append("""
-      <li>
-        <a href="#!#{slug}">#{name}</a>
-        <input id="#{slug}_nav" type="radio" name="group-0">
-        <label for="#{slug}_nav">▼</label>
-        <div>
-          <input id="close-0" type="radio" name="group-0">
-          <label for="close-0">▲</label>
-        </div>
-      <li>
-    """)
-
-    @$el.find('select').append("""
-      <option value="##{slug}">#{name}</option>
-    """)
+    console.log "(nav) page: #{page.get('name')}"
 
   initialize: =>
     @model.on('change:selected', @render)
-    @model.on('add', @added_page)
-
 
 # the router makes the backbuttons work (since we're not really going to
 # another page, we are just loading new content for the page we are on). also
@@ -130,7 +105,7 @@ class Page extends Backbone.Model
 
   initialize: =>
     @on('change:selected', @onchange)
-    p "loaded page: #{@get 'name'}"
+    console.log "loaded page: #{@get 'name'}"
 
 # this is a view that's connected to the page model... it just deals with
 # hiding the content of pages that we are not on, and showing the content of
@@ -139,7 +114,7 @@ class PageView extends Backbone.View
   tagName: 'section'
 
   render: =>
-    p 'render page', @el
+    console.log 'render page', @el
     if @model.get('selected')
       @el.style.display = 'block' # show
     else
@@ -150,7 +125,7 @@ class PageView extends Backbone.View
     @model.view = @
 
     slug = @model.get('slug')
-    
+
     @$el.attr(
       id: "#{slug}-content"
       class: @model.get('categories').join('-category ')
@@ -164,6 +139,10 @@ class PagesCollection extends Backbone.Collection
   # to determine what should be rendered in the navbar on any given page
   model: Page
   default_page: 'blog'
+
+  constructor: ->
+    super()
+    @on("add", @added_page)
 
   added_page: (page_model) ->
     #used to create the view for a page after it has been added
@@ -183,7 +162,7 @@ class PagesCollection extends Backbone.Collection
     if page?
       page.set(selected: true)
     else
-      p "#{page_slug} doesn't exist, redirecting to #{@default_page}"
+      console.log "#{page_slug} doesn't exist, redirecting to #{@default_page}"
 
       router.navigate('!' + @default_page,
         trigger: true
@@ -196,22 +175,10 @@ class PagesCollection extends Backbone.Collection
   current_page: ->
     return @where(selected: true)[0]
 
-  initialize: =>
-    @on("add", @added_page)
-
 #create all the models & views in the application
 window.pages = new PagesCollection()
 window.router = new Router model: pages
 window.navView = new NavView model: pages
-
-###*
- * holds all the attachments that we find when adding pages. later used to add
-   captions and titles n' stuff to the images because a lot of that isn't
-   avaliable in the outputted html
- * all the keys are urls, so it's easy to lookup based on the images
- * @type {Object}
-###
-window.attachment_index = {}
 
 blog = pages.create(
   slug: 'blog'
@@ -225,9 +192,6 @@ $('.box.more-posts').before(blog.view.el)
 
 API.cache.posts.on 'add', (model) ->
   blog.view.$el.append(model.view.el)
-
-# get the 10 most recent posts
-API.getPosts()
 
 API.cache.pages.on 'add', (model) ->
   categories = []
@@ -254,6 +218,13 @@ API.cache.pages.on 'add', (model) ->
     $(form).attr('action', API.backendURL + $(form).attr('action'))
     $.wpcf7Init()
 
+MenuView = require './menuview'
+API.getMenu('main', (menu) ->
+  view = new MenuView(model: menu)
+  $('[for="nav-wrapper"]').append view.el
+)
+
+API.getPosts()
 API.getPages()
 
 Backbone.history.start()
@@ -264,7 +235,3 @@ if Backbone.history.fragment is ''
     trigger: true
     replace: true
   )
-
-$("nav select").change( ->
-  window.location = $(@).find("option:selected").val()
-)

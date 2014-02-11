@@ -1,7 +1,7 @@
 #TODO: rewrite with promises
 jsonp = require 'jsonp'
 Backbone = require 'backbone'
-_ = require 'underscore'
+window._ = require 'underscore'
 
 class ContentObject extends Backbone.Model
   defaultFields: []
@@ -11,7 +11,7 @@ class ContentObject extends Backbone.Model
    * @type {Array}
   ###
   ignoredFields: []
-  
+
   ###*
    * Determine what fields we don't have (minus those that we are ignoring)
    * @return {Array} list of fields
@@ -103,29 +103,134 @@ class Attachment extends ContentObject
     'images'
   ]
 
+class MenuItem extends ContentObject
+  defaultFields: [
+    'ID'
+    'post_author'
+    'post_date'
+    'post_date_gmt'
+    'post_content'
+    'post_title'
+    'post_excerpt'
+    'post_status'
+    'comment_status'
+    'ping_status'
+    'post_password'
+    'post_name'
+    'to_ping'
+    'pinged'
+    'post_modified'
+    'post_modified_gmt'
+    'post_content_filtered'
+    'post_parent'
+    'guid'
+    'menu_order'
+    'post_type'
+    'post_mime_type'
+    'comment_count'
+    'filter'
+    'db_id'
+    'menu_item_parent'
+    'object_id'
+    'object'
+    'type'
+    'type_label'
+    'title'
+    'url'
+    'target'
+    'attr_title'
+    'description'
+    'classes'
+    'xfn'
+  ]
 
-class Posts extends Backbone.Collection
+class Menu extends ContentObject
+  model: MenuItem
+
+class ObjectCollection extends Backbone.Collection
+  constructor: (@wp) ->
+    super()
+    @on('add', @processObject)
+
+  ###*
+   * Take an object out of a model replacing it with a reference to the
+     removed field and put the removed field into its own collection
+   * @param {ContentObject} model
+   * @param {String} fieldName The name of the field to abstract.
+   * @param {String} [collectionName=fieldName] The name of the collection to
+     put the removed object into. If omitted, the fieldName will be used.
+  ###
+  abstractField: (model, fieldName, collectionName='') ->
+    if collectionName is '' then collectionName = fieldName
+    field = model.get fieldName
+    unless field? then return
+
+    # when adding models, it doesn't matter if it's an array - Backbone deals
+    # with that
+    model.set fieldName, @wp.cache[collectionName].add(field, merge: true)
+
+  ###*
+   * Deal with objects that are inside of the model
+   * @param {ContentObject} model
+  ###
+  processObject: (model) ->
+
+
+class Posts extends ObjectCollection
   model: Post
 
+  processObject: (model) =>
+    @abstractField model, 'attachments'
+    @abstractField model, 'categories'
+    @abstractField model, 'tags'
+    @abstractField model, 'author', 'authors'
+    @abstractField model, 'comments'
 
-class Categories extends Backbone.Collection
+
+class Categories extends ObjectCollection
   model: Category
 
+  processObject: (model) =>
+    @abstractField model, 'comments'
 
-class Tags extends Backbone.Collection
+
+class Tags extends ObjectCollection
   model: Tag
 
 
-class Authors extends Backbone.Collection
+class Authors extends ObjectCollection
   model: Author
 
 
-class Comments extends Backbone.Collection
+class Comments extends ObjectCollection
   model: Comment
 
 
-class Attachments extends Backbone.Collection
+class Attachments extends ObjectCollection
   model: Attachment
+
+
+class MenuItems extends ObjectCollection
+  model: MenuItem
+
+  processObject: (model) =>
+    model.set 'children', []
+
+    parentId = +model.get('menu_item_parent') # make it an int
+    if parentId isnt 0
+      model.set 'is_root_level', false
+
+      # Switch from having each MenuItem denote its parent, to having each
+      # list their children (easier to walk). This relies on the post's parent
+      # having already been added... which seems to be the order that
+      # wordpress gives it to us in.
+      parent = @findWhere(ID: parentId)
+      parent.set 'children', parent.get('children').concat(model)
+    else
+      # there's nothing above this menu element
+      model.set 'is_root_level', true
+
+    model.unset 'menu_item_parent'
 
 
 ###*
@@ -141,23 +246,22 @@ class WordPress
 
   ###*
    * The maximum number of posts to ask for in a request. (the `count` param)
-   * @type {Number}
+   * @type {Integer}
   ###
   maxPostsPerRequest: 10
 
-  cache:
-    posts: new Posts()
-    pages: new Posts()
-    categories: new Categories()
-    tags: new Tags()
-    authors: new Authors()
-    comments: new Comments()
-    attachments: new Attachments()
+  cache: {}
 
   constructor: (@backendURL) ->
-    for name, collection of @cache
-      console.log collection
-      collection.on('add', @processObject)
+    # these need to be made here to set @wp (`this`) properly
+    @cache.posts = new Posts(this)
+    @cache.pages = new Posts(this)
+    @cache.categories = new Categories(this)
+    @cache.tags = new Tags(this)
+    @cache.authors = new Authors(this)
+    @cache.comments = new Comments(this)
+    @cache.attachments = new Attachments(this)
+    @cache.menus = {}
 
   makeURL: (params) ->
     query = []
@@ -169,35 +273,6 @@ class WordPress
       url += "?#{query.join('&')}"
 
     url
-
-  ###*
-   * Take an object out of a model (replacing it with an ID) and put the
-     removed object into its own collection
-   * @param {ContentObject} model
-   * @param {String} fieldName The name of the field to abstract.
-   * @param {String} [collectionName=fieldName] The name of the collection to
-     put the removed object into. If omitted, the fieldName will be used.
-  ###
-  abstractField: (model, fieldName, collectionName='') ->
-    if collectionName is '' then collectionName = fieldName
-    field = model.get fieldName
-    unless field? then return
-
-    # when adding models, it doesn't matter if it's an array - Backbone deals
-    # with that
-    model.set fieldName, @cache[collectionName].add(field, merge: true)
-    
-
-  ###*
-   * Deal with objects that are inside of the model
-   * @param {ContentObject} model
-  ###
-  processObject: (model) =>
-    @abstractField model, 'categories'
-    @abstractField model, 'tags'
-    @abstractField model, 'author', 'authors'
-    @abstractField model, 'comments'
-    @abstractField model, 'attachments'
 
   request: (method, params={}, cb) ->
     params['json'] = method
@@ -215,5 +290,12 @@ class WordPress
     @request 'get_page_index', query, (err, data) =>
       unless err
         @cache.pages.add data['pages']
+
+  getMenu: (name, cb) =>
+    @request 'get_menu', name:name, (err, data) =>
+      unless err
+        @cache.menus[name] = new MenuItems(this)
+        @cache.menus[name].add(data['menu'])
+        cb(@cache.menus[name])
 
 module.exports = WordPress
